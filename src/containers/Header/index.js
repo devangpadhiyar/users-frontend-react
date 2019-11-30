@@ -1,15 +1,16 @@
 /* eslint-disable require-jsdoc */
 import React, {PureComponent} from 'react';
 import {Navbar} from 'react-bootstrap';
+import {NavLink} from 'react-router-dom';
 
 
 class Header extends PureComponent {
   render() {
     return (
       <Navbar bg={'dark'} variant="dark">
-        <Navbar.Brand>
+        <NavLink to='' className="navbar-brand">
             User CRUD app
-        </Navbar.Brand>
+        </NavLink>
       </Navbar>
     );
   }
