@@ -3,18 +3,18 @@ import {Container, Row, Col, Table, Button} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {fetchUserList, removeUserFromList} from './actions';
 import {withRouter} from 'react-router-dom';
+import DeleteConfirmDialog  from '../../components/DeleteConfirmDialog'; 
  
 class UserListPage extends Component {
-	state = { }
+	state = { 
+    deleteModal:false,
+    deleteData:null
+  }
 	
 	componentDidMount() {
 		this.props.getUsers();
   }
   
-  onClickRemoveButton = (userId)=>{
-    this.props.removeUser(userId);
-  }
-
   onClickViewEditButton = (userId)=>{
     this.props.history.push(`/user/${userId}`);
   }
@@ -25,10 +25,29 @@ class UserListPage extends Component {
       this.props.getUsers();
     }
   }
+
+
+  handleDeleteModalOpen = (data)=>{
+    this.setState({deleteModal:true,deleteData:{...data}})
+  }
+
+  handleDeleteModalClose = ()=>{
+    this.setState({deleteModal:false,deleteData:null})
+  }
   
+  handleDeleteConfirm = ()=>{
+    this.props.removeUser(this.state.deleteData._id);
+    this.handleDeleteModalClose();
+  }
 
   render() {
     const {users, status} = this.props;
+    const {deleteModal,deleteData} = this.state;
+    let deleteBody = null;
+    if(deleteData){
+    deleteBody = (<p>Do you want to delete user {deleteData.firstName} {deleteData.lastName}</p>)
+    }
+
     return (
       <Container>
         <Row style={{marginTop:'50px'}}>
@@ -53,7 +72,7 @@ class UserListPage extends Component {
                       <td>{u.lastName}</td>
                       <td>{u.age}</td>
                       <td>
-                        <Button variant="danger" style={{marginLeft:'5px',marginRight:'5px'}} onClick={()=>this.onClickRemoveButton(u._id)}>Delete</Button>
+                        <Button variant="danger" style={{marginLeft:'5px',marginRight:'5px'}} onClick={()=>this.handleDeleteModalOpen(u)}>Delete</Button>
                         <Button style={{marginLeft:'5px',marginRight:'5px'}} onClick={()=>this.onClickViewEditButton(u._id)}>View/Edit</Button>
                       </td>
                     </tr>
@@ -70,6 +89,13 @@ class UserListPage extends Component {
             <Button onClick={()=>this.props.history.push('/user/add')}> Add user</Button>
           </Col>
         </Row>
+        <DeleteConfirmDialog 
+            show={deleteModal} 
+            handleClose={this.handleDeleteModalClose} 
+            body={deleteBody} 
+            heading="Delete confirmation"
+            onConfirm={this.handleDeleteConfirm}
+            />
       </Container>	
     )
       
