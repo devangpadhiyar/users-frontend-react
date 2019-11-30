@@ -17,7 +17,7 @@ const reducer = (state=initialState, action)=>{
     case ADD_USER:
       return state.set('status', 'loading').set('data', false).toJS();
     case ADD_USER_ERROR:
-      return state.set('status', 'error').set('data', action.payload).toJS();
+      return state.set('status', 'error').set('data', action.payload.errors).toJS();
     case ADD_USER_SUCCESS:
       return state.set('status', 'success').set('data', action.payload).toJS();
     default:

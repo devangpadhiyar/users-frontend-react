@@ -28,7 +28,7 @@ const reducer = (state=initialState, action)=>{
     case UPDATE_USER:
       return state.set('updateStatus', 'loading').set('updateData', {}).toJS();
     case UPDATE_USER_ERROR:
-      return state.set('updateStatus', 'error').set('updateData', {}).toJS();
+      return state.set('updateStatus', 'error').set('updateData', fromJS(action.payload.errors)).toJS();
     case UPDATE_USER_SUCCESS:
       return state.set('updateStatus', 'success').set('updateData', {}).toJS();
     default:

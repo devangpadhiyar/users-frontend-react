@@ -11,6 +11,7 @@ export class AddUserPage extends Component {
     firstName:'',
     lastName:'',
     age:'',
+    errors:{}
 	}
 
 
@@ -23,20 +24,38 @@ export class AddUserPage extends Component {
 
   onChangeInput = (e)=>{
     const {name,value} = e.target;
+
+    let errors = {...this.state.errors};
+    delete errors[name];
+
     this.setState({
-      [name]:value
-    })
+      [name]:value,
+      errors
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if(this.props.status !== nextProps.status && nextProps.status==="success"){
       this.props.history.push('/');
     }
+
+    if(this.props.status !== nextProps.status && nextProps.status==="error"){
+      const errors = {}
+      if(nextProps.data){
+         Object.keys(nextProps.data).map((k)=>{
+           errors[k] = nextProps.data[k].message
+         }) 
+      }
+      this.setState({
+        errors,
+      })
+    }
   }
   
 
   render() {
     const {data, status} = this.props;
+    const {errors} = this.state;
     return (
       <Container>
         <Row>
@@ -49,15 +68,20 @@ export class AddUserPage extends Component {
             <Form onSubmit={this.onSubmit}>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>First name</Form.Label>
-                <Form.Control name="firstName" required type="text" placeholder="Enter firstname" onChange={this.onChangeInput}/>
-                {/* <Form.Text className="text-muted">
-                  Enter first name
-                </Form.Text> */}
+                <Form.Control name="firstName" type="text" placeholder="Enter firstname" onChange={this.onChangeInput}/>
+                {errors.firstName && (
+                <Form.Text variant="" className="text-danger">
+                  {errors.firstName}
+                </Form.Text>)}
               </Form.Group>
 
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Last name</Form.Label>
-                <Form.Control name="lastName" type="text" required placeholder="Enter last name" onChange={this.onChangeInput}/>
+                <Form.Control name="lastName" type="text" placeholder="Enter last name" onChange={this.onChangeInput}/>
+                {errors.lastName && (
+                <Form.Text className="text-danger">
+                  {errors.lastName}
+                </Form.Text>)}
               </Form.Group>
 
               

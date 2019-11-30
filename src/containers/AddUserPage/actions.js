@@ -21,7 +21,6 @@ const addUserSuccess = (payload) => ({
 });
 
 export const addUserForm = (payload)=>{
-  debugger;
   return (dispatch)=>{
     dispatch(addUser());
     axios.post(`/user`, payload).then((res)=>{
@@ -29,8 +28,7 @@ export const addUserForm = (payload)=>{
         dispatch(addUserSuccess(res.data));
       };
     }, ({response})=>{
-      debugger;
-      if (response.status === 404) dispatch(addUserError(response.data));
+      if (response.status === 400) dispatch(addUserError(response.data));
     });
   };
 };
