@@ -8,6 +8,8 @@ Demo application which includes following basic operations
 - List User
 - Display user
 
+> Note: ** Please start backend server before running this **
+
 In order to start project you need to do following steps.
 ```
 npm install
